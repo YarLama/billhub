@@ -1,3 +1,4 @@
+import { TestButton } from '@/features/test';
 import 'server-only';
 
 export function BillsPage() {
@@ -7,6 +8,7 @@ export function BillsPage() {
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">Счета и квитанции</h1>
         <p className="text-slate-500 mt-1">Здесь отображаются документы, автоматически извлеченные из вашей почты IMAP.</p>
       </header>
+      <TestButton />
       <div className="bg-white rounded-2xl border border-slate-200/80 p-12 text-center shadow-sm">
         <div className="text-4xl mb-4">📂</div>
         <h3 className="text-lg font-semibold text-slate-800">Список счетов пуст</h3>

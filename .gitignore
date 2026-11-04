@@ -2,6 +2,7 @@
 
 # local
 project.md
+data
 # dependencies
 /node_modules
 /.pnp
