@@ -1,11 +1,12 @@
 'use client';
 
-import { runTestStorage } from "../actions";
+import { runTestCrypto, runTestStorage } from "../actions";
 
 export function TestButton() {
   
   const handleTest = async () => {
-    await runTestStorage();
+    //await runTestStorage();
+    await runTestCrypto();
   }
 
   return(
