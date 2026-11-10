@@ -1,3 +1,4 @@
+import { ImapSettings } from '@/features/imapConfigure';
 import 'server-only';
 
 export function SettingsPage() {
@@ -9,8 +10,7 @@ export function SettingsPage() {
       </header>
       <div className="flex flex-col gap-6">
         <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-800 mb-4">Интеграция IMAP</h3>
-          <p className="text-sm text-slate-400">Форма настройки подключения будет размещена здесь.</p>
+          <ImapSettings />
         </div>
       </div>
     </div>

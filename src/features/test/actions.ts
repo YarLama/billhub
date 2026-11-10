@@ -1,36 +1,17 @@
 'use server';
 
-import { decryptDekWithMaster, decryptPassword, encryptDekWithMaster, encryptPassword, generateRandomDek, serverStorage } from "@/shared/lib";
+import { decryptDekWithMaster, decryptPassword, encryptDekWithMaster, encryptPassword, generateRandomDek } from "@/shared/lib/crypto";
+import { serverStorage } from "@/shared/lib/storage";
 
 export async function runTestCrypto() {
   try {
-    console.log('------start test crypto------');
     const pass = "password1234-4321";
     const masterPass = "9876";
-    console.log(`pass: ${pass}
-                 master pass: ${masterPass}`);
-    console.log('------start encrypting-------');
     const newDek = generateRandomDek();
-    console.log(`newDek: ${newDek}
-                `);
     const eDek = await encryptDekWithMaster(newDek, masterPass);
-    console.log(`encryptedDek: ${eDek}
-                `);
     const ePass = await encryptPassword(pass, newDek);
-    console.log(`encryptedPass: ${ePass}
-
-                `);
-
-    console.log('------start decrypting-------');
-
     const dDek = await decryptDekWithMaster(eDek,masterPass)
-    console.log(`dDek: ${dDek}
-
-                `)
     const dPass = await decryptPassword(ePass, dDek);
-    console.log(`dPass: ${dPass}
-
-                `)
   } catch(e) {
     console.error(`Tests error: ${e}`);
   }
