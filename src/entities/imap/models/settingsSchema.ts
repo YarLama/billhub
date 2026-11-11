@@ -15,4 +15,4 @@ export const settingsSchema = z.object({
   password: z.string().min(1, "Password is required")
 });
 
-export type ConfigImap = z.infer<typeof settingsSchema>;
+export type ImapForm = z.infer<typeof settingsSchema>;

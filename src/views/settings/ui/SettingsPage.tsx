@@ -1,7 +1,12 @@
+import { imapConfigFile } from '@/entities/imap';
 import { ImapSettings } from '@/features/imapConfigure';
 import 'server-only';
 
-export function SettingsPage() {
+const imapInitialData = await imapConfigFile.read();
+console.log('imap.json: ', imapInitialData)
+
+export async function SettingsPage() {
+
   return (
     <div className="p-8 max-w-3xl mx-auto">
       <header className="mb-8">
