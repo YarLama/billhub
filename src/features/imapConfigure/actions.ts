@@ -15,7 +15,7 @@ export type ActionState = {
   fields?: FieldsActionState;
 }
 
-export async function saveImap(prevState: ActionState, formData: FormData) {
+export async function saveImap(prevState: ActionState, formData: FormData): Promise<ActionState> {
   const rawData = Object.fromEntries(formData.entries());
   const parsed = settingsSchema.safeParse(rawData);
   const fields = {
@@ -30,6 +30,7 @@ export async function saveImap(prevState: ActionState, formData: FormData) {
   if (!parsed.success) {
     return {
       success: false,
+      message: "Actions failed",
       errors: z.flattenError(parsed.error).fieldErrors,
       fields
     };
