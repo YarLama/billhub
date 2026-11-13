@@ -1,6 +1,6 @@
 'use server';
 
-import { ImapConfig, imapConfigFile, settingsSchema } from "@/entities/imap";
+import { IMAP_PASS_HIDE_STRING, ImapConfig, imapConfigFile, settingsSchema } from "@/entities/imap";
 import { ImapForm } from "@/entities/imap/models/settingsSchema";
 import { encryptDekWithMaster, encryptPassword, generateRandomDek } from "@/shared/lib/crypto";
 import z from "zod";
@@ -23,9 +23,8 @@ export async function saveImap(prevState: ActionState, formData: FormData): Prom
     port: formData.get("port")?.toString() ?? "",
     user: formData.get("user")?.toString() ?? "",
     password: formData.get("password")?.toString() ?? "",
+    masterPassword: formData.get("masterPassword")?.toString() ?? "",
   }
-  console.log(`rawData: `, rawData);
-  console.log(`parsed: `, parsed);
 
   if (!parsed.success) {
     return {
@@ -37,27 +36,47 @@ export async function saveImap(prevState: ActionState, formData: FormData): Prom
   }
 
   try {
-    console.log(`SaveImap actions`, parsed.data);
-    const testMasterPass = "1234";
-    const password = parsed.data.password;
-    const newDek = generateRandomDek();
-    const eDek = await encryptDekWithMaster(newDek, testMasterPass);
-    const ePassword = await encryptPassword(password, newDek);
+    const existingConfig = await imapConfigFile.read();
+    const { password, masterPassword, ...restData } = parsed.data;
+    let finalDek, finalPassword;
+    const isPasswordChanged = !existingConfig || password !== IMAP_PASS_HIDE_STRING;
+
+    if (isPasswordChanged) {
+      if (!masterPassword?.trim()) {
+        return {
+          success: false,
+          message: "Master password needed",
+          errors: { masterPassword: ["Enter Master password"] },
+          fields
+        }
+      }
+      const newDek = generateRandomDek();
+      finalDek = await encryptDekWithMaster(newDek, masterPassword);
+      finalPassword = await encryptPassword(password, newDek);
+    } else {
+      finalDek = existingConfig.dek;
+      finalPassword = existingConfig.password;
+    }
+
     const data: ImapConfig = {
-      ...parsed.data,
-      password: ePassword,
-      dek: eDek
+      ...restData,
+      password: finalPassword,
+      dek: finalDek
     }
     await imapConfigFile.save(data);
     return {
       success: true,
       message: "Actions success",
-      fields
+      fields: {
+        ...fields,
+        password: IMAP_PASS_HIDE_STRING,
+        masterPassword: ""
+      }
     }
   } catch (e) {
     return {
       success: false,
-      message: "Actions error",
+      message: `Actions error: ${e}`,
       fields
     }
   }

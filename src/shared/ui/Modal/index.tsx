@@ -5,10 +5,9 @@ import { ComponentProps, useEffect, useRef, MouseEvent } from "react";
 interface ModalProps extends Omit<ComponentProps<'dialog'>, 'open' | 'onClose'> {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
 }
 
-export const Modal = ({ isOpen = false, onClose, title, onClick, children, ...props }: ModalProps) => {
+export const Modal = ({ isOpen = false, onClose, onClick, children, className, ...props }: ModalProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const handleBackClick = (e: MouseEvent<HTMLDialogElement>) => {
@@ -33,7 +32,9 @@ export const Modal = ({ isOpen = false, onClose, title, onClick, children, ...pr
       ref={dialogRef}
       onClose={onClose}
       onClick={handleBackClick}
-      title={title}
+      className={`
+        m-auto p-0 bg-transparent backdrop:bg-black/80 backdrop:backdrop-blur-xs
+        ${className}`}
       {...props}
     >
       <div onClick={(e) => e.stopPropagation()}>

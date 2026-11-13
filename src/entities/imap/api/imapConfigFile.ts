@@ -2,8 +2,8 @@ import { serverStorage } from "@/shared/lib/storage"
 import { ImapForm } from "../models/settingsSchema";
 
 const IMAP_CONFIG_FILENAME = "config_imap.json"
-const IMAP_PASS_HIDE_STRING = "0".repeat(16);
-export type ImapConfig = ImapForm & { dek: string};
+export const IMAP_PASS_HIDE_STRING = "c8ec0c428d823762cb3311fabb74b59c";
+export type ImapConfig = Omit<ImapForm & { dek: string}, "masterPassword">;
 
 export const imapConfigFile = {
   save: async function(data: ImapConfig) {

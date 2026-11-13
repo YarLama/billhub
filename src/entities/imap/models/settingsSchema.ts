@@ -12,7 +12,8 @@ export const settingsSchema = z.object({
       .default(993)
   ),
   user: z.email("User mail must be correct").min(1, "User is required"),
-  password: z.string().min(1, "Password is required")
+  password: z.string().min(1, "Password is required"),
+  masterPassword: z.string().optional().transform((val) => (val?.trim() ? val.trim() : undefined))
 });
 
 export type ImapForm = z.infer<typeof settingsSchema>;
