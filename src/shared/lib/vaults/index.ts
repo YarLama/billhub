@@ -1,0 +1,1 @@
+export { dekVault } from './dekVault';
