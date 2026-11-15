@@ -1,9 +1,11 @@
 import { serverStorage } from "@/shared/lib/storage"
 import { ImapForm } from "../models/settingsSchema";
+import { decryptDekWithMaster } from "@/shared/lib/crypto";
+import { dekVault } from "@/shared/lib/vaults";
 
 const IMAP_CONFIG_FILENAME = "config_imap.json"
 export const IMAP_PASS_HIDE_STRING = "c8ec0c428d823762cb3311fabb74b59c";
-export type ImapConfig = Omit<ImapForm & { dek: string}, "masterPassword">;
+export type ImapConfig = Omit<ImapForm & { dek: string }, "masterPassword">;
 
 export const imapConfigFile = {
   save: async function(data: ImapConfig) {
@@ -16,6 +18,19 @@ export const imapConfigFile = {
   readClient: async function(): Promise<ImapConfig | null> {
     const data = await this.read();
     if (!data) return null;
-    return {...data, password: data.password ? IMAP_PASS_HIDE_STRING : ""};
+    return { ...data, password: data.password ? IMAP_PASS_HIDE_STRING : "" };
+  },
+  unlockImap: async function(masterPassword: string, cache = true): Promise<boolean> {
+    if (!masterPassword.trim()) return false;
+    const config = await this.read();
+    if (!config?.dek) return false;
+
+    try {
+      const plainDek = await decryptDekWithMaster(config.dek, masterPassword);
+      if (cache) dekVault.set(plainDek);
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
