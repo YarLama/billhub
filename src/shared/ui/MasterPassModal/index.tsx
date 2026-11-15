@@ -1,19 +1,21 @@
 'use client';
-import { ComponentProps, KeyboardEvent, useRef } from "react"
+import { ComponentProps, KeyboardEvent, useRef, useState } from "react"
 import { Button } from "../Button"
 import { Input } from "../Input"
 import { Modal } from "../Modal"
 
 
 interface MasterPassModalProps extends ComponentProps<typeof Modal> {
-  onConfirm: (password: string) => void | Promise<void>
+  onConfirm: (password: string) => boolean | Promise<boolean>
   clearOnConfirm?: boolean;
   clearOnClose?: boolean;
+  errorMessage?: string;
 }
 
-export const MasterPassModal = ({ onConfirm, onClose, clearOnConfirm = true, clearOnClose = true, ...props }: MasterPassModalProps) => {
+export const MasterPassModal = ({ onConfirm, onClose, clearOnConfirm = true, clearOnClose = true, errorMessage, ...props }: MasterPassModalProps) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const clearInput = () => {
     if (inputRef.current) {
@@ -30,11 +32,19 @@ export const MasterPassModal = ({ onConfirm, onClose, clearOnConfirm = true, cle
 
   const handleConfirm = async () => {
     const password = inputRef.current?.value;
-    if (!password) return;
-
-    await onConfirm(password);
-    if (clearOnConfirm) clearInput();
-    onClose();
+    if (!password || isLoading) return;
+    setIsLoading(true);
+    try {
+      const res = await onConfirm(password);
+      if (res === false) {
+        inputRef.current?.focus()
+        return;
+      }
+      if (clearOnConfirm) clearInput();
+      onClose();
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleClose = () => {
@@ -46,7 +56,7 @@ export const MasterPassModal = ({ onConfirm, onClose, clearOnConfirm = true, cle
     <Modal {...props} onClose={handleClose}>
       <div className="bg-gray-500 p-6 rounded-3xl">
         <header><h3>Enter Master Password</h3></header>
-        <Input ref={inputRef} type="password" name="masterPassword" onKeyDown={handleKeyDown} />
+        <Input ref={inputRef} type="password" name="masterPassword" onKeyDown={handleKeyDown} error={errorMessage} />
         <Button label="Confirm" onClick={handleConfirm} type="button" />
       </div>
     </Modal>
