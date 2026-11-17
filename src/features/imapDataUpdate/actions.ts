@@ -1,7 +1,8 @@
 'use server';
-import { imapConfigFile } from "@/entities/imap";
+import { imapConfigFile, withImapClient } from "@/entities/imap";
 import { decryptDekWithMaster, decryptPassword } from "@/shared/lib/crypto";
 import { dekVault } from "@/shared/lib/vaults";
+import { ImapFlowError } from "imapflow";
 
 export type ImapUpdateDataResult =
   | { status: 'SUCCESS' }
@@ -25,6 +26,7 @@ export async function imapUpdateDataAction(options?: UpdateOptions): Promise<Ima
   let dek = dekVault.get();
   if (!dek) {
     if (!masterPassword) {
+
       return { status: 'NEED_PASSWORD' };
     }
 
@@ -38,12 +40,21 @@ export async function imapUpdateDataAction(options?: UpdateOptions): Promise<Ima
 
   try {
     const plainPassword = await decryptPassword(config.password, dek);
+    await withImapClient(config, plainPassword, async (client) => {
+      await client.noop();
+    })
 
     return { status: 'SUCCESS' };
   } catch (e) {
+    let message = "IMAP connection is failed";
+    if ((e as ImapFlowError)?.authenticationFailed) {
+      message = "Wrong user or password from mail";
+    } else if (e instanceof Error) {
+      message = e.message;
+    }
     return {
       status: 'ERROR',
-      message: e instanceof Error ? e.message : "IMAP connection is failed"
+      message,
     };
   }
 }
