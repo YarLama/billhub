@@ -49,6 +49,8 @@ export async function imapUpdateDataAction(options?: UpdateOptions): Promise<Ima
     let message = "IMAP connection is failed";
     if ((e as ImapFlowError)?.authenticationFailed) {
       message = "Wrong user or password from mail";
+    } else if ((e as ImapFlowError)?.code === 'ENOTFOUND' || (e as ImapFlowError)?.code === 'ETIMEOUT') {
+      message = "Server unreachable (try check host or port)";
     } else if (e instanceof Error) {
       message = e.message;
     }
