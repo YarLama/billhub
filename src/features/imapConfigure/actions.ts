@@ -1,7 +1,6 @@
 'use server';
 
-import { IMAP_PASS_HIDE_STRING, ImapConfig, imapConfigFile, settingsSchema } from "@/entities/imap";
-import { ImapForm } from "@/entities/imap/models/settingsSchema";
+import { IMAP_PASS_HIDE_STRING, ImapConfig, imapConfigFile, ImapForm, settingsSchema } from "@/entities/imap";
 import { encryptDekWithMaster, encryptPassword, generateRandomDek } from "@/shared/lib/crypto";
 import z from "zod";
 
