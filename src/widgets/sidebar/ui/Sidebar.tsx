@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { RefreshDataButton } from './RefreshDataButton';
+import { ROUTES } from '@/shared/config';
 
 export function Sidebar() {
 
@@ -13,13 +14,13 @@ export function Sidebar() {
         </div>
         <nav className="flex flex-col gap-4 w-full items-center px-2">
           <Link
-            href="/"
+            href={ROUTES.HOME}
             title="Счета"
           >
             💵
           </Link>
           <Link
-            href="/settings"
+            href={ROUTES.SETTINGS}
             title="Настройки"
           >
             ⚙️
