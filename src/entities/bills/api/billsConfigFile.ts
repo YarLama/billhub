@@ -3,9 +3,7 @@ import { BillsDefaultForm } from "../models/settingsSchema";
 
 const BILLS_DEFAULTS_CONFIG_FILENAME = "bills_default.json";
 
-export type BillsDefaulConfig = {
-  defaults: BillsDefaultForm[];
-}
+export type BillsDefaulConfig = BillsDefaultForm[];
 export type BillsDefaulItem = BillsDefaultForm;
 
 export const billsConfigFile = {

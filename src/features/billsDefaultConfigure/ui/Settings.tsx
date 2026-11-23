@@ -32,7 +32,7 @@ export const Settings = ({ billsDefaultConfig: billsConfigPromise }: SettingsPro
   return (
     <div>
       <h1>Default Bills</h1>
-      {billsDefaultConfig?.defaults.map((item) => {
+      {billsDefaultConfig?.map((item) => {
         return (
           <div key={item.id} onClick={() => handleEditClick(item)}>
             {item.name}

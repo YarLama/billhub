@@ -35,23 +35,22 @@ export async function saveDefaultBill(prevState: ActionState, formData: FormData
   }
 
   try {
-    const { defaults }: BillsDefaulConfig = (await billsConfigFile.read()) ?? { defaults: [] };
+    const config: BillsDefaulConfig = (await billsConfigFile.read()) ?? [];
     const isEdit = Boolean(parsed.data.id);
     const itemToSave = {
       ...parsed.data,
       id: parsed.data.id || crypto.randomUUID(),
     };
 
-    if (isEdit) {
-      const existingIndex = defaults.findIndex((item) => item.id === itemToSave.id);
-      if (existingIndex === -1) {
-        defaults[existingIndex] = itemToSave;
-      } else defaults.push(itemToSave);
+    const existingIndex = config.findIndex((item) => item.id === itemToSave.id);
+
+    if (existingIndex === -1) {
+      config.push(itemToSave);
     } else {
-      defaults.push(itemToSave);
+      config[existingIndex] = itemToSave;
     }
 
-    await billsConfigFile.save({ defaults });
+    await billsConfigFile.save(config);
     revalidatePath(ROUTES.SETTINGS)
 
     return {
@@ -73,10 +72,10 @@ export async function deleteDefaultBill(id: string): Promise<ActionState> {
   if (!id) return { success: false, message: "'id' needed" };
 
   try {
-    const { defaults }: BillsDefaulConfig = (await billsConfigFile.read()) ?? { defaults: [] };
-    const updatedDefaults = defaults.filter((item) => item.id !== id);
+    const config: BillsDefaulConfig = (await billsConfigFile.read()) ?? [];
+    const updatedConfig = config.filter((item) => item.id !== id);
 
-    await billsConfigFile.save({ defaults: updatedDefaults })
+    await billsConfigFile.save(updatedConfig)
     revalidatePath(ROUTES.SETTINGS)
 
     return { success: true, message: 'Bill deleted' };
