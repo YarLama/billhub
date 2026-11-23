@@ -40,6 +40,8 @@ export async function imapUpdateDataAction(options?: UpdateOptions): Promise<Ima
 
   try {
     const plainPassword = await decryptPassword(config.password, dek);
+
+    // Сам запрос
     await withImapClient(config, plainPassword, async (client) => {
       await client.noop();
     })

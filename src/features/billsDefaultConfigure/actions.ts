@@ -1,12 +1,12 @@
 'use server';
 
 import z from "zod";
-import { billsConfigFile, BillsDefaulConfig, billsDefaultForm, settingsSchema } from "@/entities/bills";
+import { billsConfigFile, BillsDefaulConfig, BillsDefaultForm, settingsSchema } from "@/entities/bills";
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "@/shared/config";
 
-type ErrorsActionState = Partial<Record<keyof billsDefaultForm, string[]>>;
-type FieldsActionState = Partial<Record<keyof billsDefaultForm, string>>;
+type ErrorsActionState = Partial<Record<keyof BillsDefaultForm, string[]>>;
+type FieldsActionState = Partial<Record<keyof BillsDefaultForm, string>>;
 export type ActionState = {
   success: boolean;
   message: string;

@@ -1,10 +1,7 @@
 import { serverStorage } from "@/shared/lib/storage";
-import { BillsDefaultForm } from "../models/settingsSchema";
+import { BillsDefaulConfig } from "../models/types";
 
 const BILLS_DEFAULTS_CONFIG_FILENAME = "bills_default.json";
-
-export type BillsDefaulConfig = BillsDefaultForm[];
-export type BillsDefaulItem = BillsDefaultForm;
 
 export const billsConfigFile = {
   save: async function(data: BillsDefaulConfig) {
