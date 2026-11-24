@@ -12,7 +12,7 @@ export const RefreshDataButton = () => {
 
   const handleUpdateClick = () => {
     startTransition(async () => {
-      const res = await imapUpdateDataAction({ cache: false});
+      const res = await imapUpdateDataAction({ cache: true });
 
       if (res.status === 'NEED_PASSWORD') {
         setIsOpen(true);

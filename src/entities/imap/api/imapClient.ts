@@ -4,7 +4,7 @@ import { ImapConfig } from "./imapConfigFile";
 export async function withImapClient<T>(
   config: ImapConfig,
   password: string,
-  callbalck: (client: ImapFlow) => Promise<T>
+  callback: (client: ImapFlow) => Promise<T>
 ): Promise<T> {
   const client = new ImapFlow({
     host: config.host,
@@ -22,7 +22,7 @@ export async function withImapClient<T>(
   try {
     await client.connect();
 
-    return await callbalck(client);
+    return await callback(client);
   } finally {
     if (client.usable) {
       await client.logout().catch(() => client.close());

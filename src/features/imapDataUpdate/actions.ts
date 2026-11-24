@@ -1,8 +1,11 @@
 'use server';
-import { imapConfigFile, withImapClient } from "@/entities/imap";
+import { billsConfigFile, getMonthKey, mergeBills } from "@/entities/bills";
+import { billsDataFile } from "@/entities/bills/api/dataFile";
+import { fetchRawBillMails, imapConfigFile, withImapClient } from "@/entities/imap";
 import { decryptDekWithMaster, decryptPassword } from "@/shared/lib/crypto";
 import { dekVault } from "@/shared/lib/vaults";
 import { ImapFlowError } from "imapflow";
+import { parseMailsToBills } from "./parseMailsToBills";
 
 export type ImapUpdateDataResult =
   | { status: 'SUCCESS' }
@@ -40,11 +43,17 @@ export async function imapUpdateDataAction(options?: UpdateOptions): Promise<Ima
 
   try {
     const plainPassword = await decryptPassword(config.password, dek);
+    const monthKey = getMonthKey();
 
-    // Сам запрос
-    await withImapClient(config, plainPassword, async (client) => {
-      await client.noop();
-    })
+    const rawMails = await withImapClient(config, plainPassword, (client) => fetchRawBillMails(client, monthKey));
+
+    const fetchedBills = parseMailsToBills(rawMails);
+    const defaultBills = (await billsConfigFile.read()) ?? [];
+    const currentData = (await billsDataFile.read()) ?? {};
+
+    currentData[monthKey] = mergeBills(currentData[monthKey], defaultBills, fetchedBills)
+
+    await billsDataFile.save(currentData);
 
     return { status: 'SUCCESS' };
   } catch (e) {
