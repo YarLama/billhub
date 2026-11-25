@@ -1,4 +1,6 @@
 export { Button } from './Button';
 export { Input } from './Input';
+export { Checkbox } from './Checkbox';
 export { Modal } from './Modal';
 export { MasterPassModal } from './MasterPassModal';
+export { CollapsibleGroup } from './CollapsibleGroup';

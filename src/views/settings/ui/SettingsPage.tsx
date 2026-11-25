@@ -1,4 +1,4 @@
-import { billsConfigFile } from '@/entities/bills';
+import { billsConfigFile } from '@/entities/bills/server';
 import { imapConfigFile } from '@/entities/imap';
 import { BillsDefaultSettings } from '@/features/billsDefaultConfigure';
 import { ImapSettings } from '@/features/imapConfigure';
@@ -20,7 +20,7 @@ export async function SettingsPage() {
       <div className="flex flex-col gap-6">
         <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
           <Suspense fallback={<div>Loading...</div>}>
-            <BillsDefaultSettings billsDefaultConfig={billsDefaultConfig}/>
+            <BillsDefaultSettings billsDefaultConfig={billsDefaultConfig} />
           </Suspense>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">

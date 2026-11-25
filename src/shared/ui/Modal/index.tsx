@@ -1,6 +1,6 @@
 'use client';
-import { ComponentProps, useEffect, useRef, MouseEvent } from "react";
 
+import { ComponentProps, useEffect, useRef, MouseEvent } from "react";
 
 interface ModalProps extends Omit<ComponentProps<'dialog'>, 'open' | 'onClose'> {
   isOpen: boolean;

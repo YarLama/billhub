@@ -1,11 +1,11 @@
 'use server';
-import { billsConfigFile, getMonthKey, mergeBills } from "@/entities/bills";
-import { billsDataFile } from "@/entities/bills/api/dataFile";
+import { getMonthKey, mergeBills } from "@/entities/bills";
 import { fetchRawBillMails, imapConfigFile, withImapClient } from "@/entities/imap";
 import { decryptDekWithMaster, decryptPassword } from "@/shared/lib/crypto";
 import { dekVault } from "@/shared/lib/vaults";
 import { ImapFlowError } from "imapflow";
 import { parseMailsToBills } from "./parseMailsToBills";
+import { billsConfigFile, billsDataFile } from "@/entities/bills/server";
 
 export type ImapUpdateDataResult =
   | { status: 'SUCCESS' }

@@ -1,5 +1,6 @@
+export { BillTile } from './ui/BillTile';
+export { BillsSummary } from './ui/BillsSummary';
 export { settingsSchema } from './models/settingsSchema';
-export { billsConfigFile } from './api/billsConfigFile';
 export { getMonthKey, getDateTitle } from './lib/helpers';
 export { mergeBills } from './lib/mergeMonthBills';
 export type { BillsDefaultForm } from './models/settingsSchema';

@@ -9,7 +9,7 @@ export function getMonthKey(date = new Date()): string {
 
 export function getDateTitle(monthKey: string): string {
   const key = monthKey.split(splitter);
-  const date = new Date(Number(key[0]), Number(key[1]), 1);
+  const date = new Date(Number(key[0]), Number(key[1]) - 1, 1);
   const formatter = new Intl.DateTimeFormat("ru-Ru", { month: "long", year: "numeric" });
   const output = formatter.format(date).replace(" г.", "").replace(/^./, (str) => str.toUpperCase());
   return output;
